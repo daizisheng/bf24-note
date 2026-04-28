@@ -40,35 +40,38 @@ $(1+1/\ell)^{-\ell}$.
 
 ## Verifying the proofs
 
-`BF24.lean` depends on Mathlib but ships no project scaffolding of its
-own (no `lakefile.toml`, no `lake-manifest.json`). Verification
-therefore reuses an existing Mathlib-pinned Lean project; we do not
-duplicate that here. Concretely:
+The repository is a self-contained Lake project. With a working Lean 4
+toolchain ([`elan`](https://github.com/leanprover/elan)) installed:
 
-1. Make sure you have a working Lean 4 toolchain
-   ([`elan`](https://github.com/leanprover/elan)) and any existing
-   Lean project that already pins Mathlib via `lake`. The configuration
-   verified here is Lean toolchain
-   `leanprover/lean4:v4.29.0-rc6` together with Mathlib commit
-   [`921b8d39`](https://github.com/leanprover-community/mathlib4/commit/921b8d39f71a5c813b526f38e4033417d40b4c3d).
+```
+git clone https://github.com/daizisheng/bf24-note.git
+cd bf24-note
+lake exe cache get   # fetch precompiled Mathlib oleans (recommended; first run only)
+lake build           # type-checks BF24.lean against pinned Mathlib
+```
 
-2. Drop `BF24.lean` into a directory that is part of a `lean_lib`
-   declared in your project's `lakefile`.
+The Lean toolchain (`leanprover/lean4:v4.29.0-rc6`) is pinned via
+`lean-toolchain`; the Mathlib commit
+([`921b8d39`](https://github.com/leanprover-community/mathlib4/commit/921b8d39f71a5c813b526f38e4033417d40b4c3d))
+is pinned via `lake-manifest.json`. `lake exe cache get` is optional
+but lets you skip rebuilding Mathlib from source (saves ~30 minutes
+on a typical machine).
 
-3. Type-check from the project root with
-   ```
-   lake env lean BF24.lean
-   ```
-   (`lake env` here is a thin wrapper that puts your Mathlib `olean`s
-   on the search path; `lean` does the actual checking.)
+For an axiom audit, run
 
-4. For an axiom audit, append the following lines to `BF24.lean` (or
-   to a sibling file that imports it) and re-run:
-   ```lean
-   #print axioms BF24.bf24_lemma1pp
-   #print axioms BF24.bf24_sharp
-   ```
-   Both should report only `[propext, Classical.choice, Quot.sound]`.
+```
+lake env lean BF24Audit.lean
+```
+
+where `BF24Audit.lean` is the one-line file
+
+```lean
+import BF24
+#print axioms BF24.bf24_lemma1pp
+#print axioms BF24.bf24_sharp
+```
+
+Both should report only `[propext, Classical.choice, Quot.sound]`.
 
 ## License
 
