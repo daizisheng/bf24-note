@@ -40,23 +40,30 @@ $(1+1/\ell)^{-\ell}$.
 
 ## Verifying the proofs
 
-`BF24.lean` is a single file with no project scaffolding. To verify:
+`BF24.lean` depends on Mathlib but ships no project scaffolding of its
+own (no `lakefile.toml`, no `lake-manifest.json`). Verification
+therefore reuses an existing Mathlib-pinned Lean project; we do not
+duplicate that here. Concretely:
 
-1. Have a working Lean 4 toolchain
-   ([`elan`](https://github.com/leanprover/elan)) and any local Lean
-   project pinned to Mathlib. The verified configuration here is
-   Lean toolchain `leanprover/lean4:v4.29.0-rc6` and Mathlib commit
+1. Make sure you have a working Lean 4 toolchain
+   ([`elan`](https://github.com/leanprover/elan)) and any existing
+   Lean project that already pins Mathlib via `lake`. The configuration
+   verified here is Lean toolchain
+   `leanprover/lean4:v4.29.0-rc6` together with Mathlib commit
    [`921b8d39`](https://github.com/leanprover-community/mathlib4/commit/921b8d39f71a5c813b526f38e4033417d40b4c3d).
 
-2. Drop `BF24.lean` into that project (any directory that is part of
-   a Lean library declared in your `lakefile`).
+2. Drop `BF24.lean` into a directory that is part of a `lean_lib`
+   declared in your project's `lakefile`.
 
-3. Type-check with
+3. Type-check from the project root with
    ```
    lake env lean BF24.lean
    ```
-   For an axiom audit, append the following to the file (or to a
-   sibling file that imports it) and re-run:
+   (`lake env` here is a thin wrapper that puts your Mathlib `olean`s
+   on the search path; `lean` does the actual checking.)
+
+4. For an axiom audit, append the following lines to `BF24.lean` (or
+   to a sibling file that imports it) and re-run:
    ```lean
    #print axioms BF24.bf24_lemma1pp
    #print axioms BF24.bf24_sharp
