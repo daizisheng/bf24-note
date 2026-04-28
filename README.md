@@ -4,25 +4,25 @@ Lean 4 / Mathlib formalization of the elementary inequalities used in
 the note
 
 > **A note on the parameter $\ell$ in Buchbinder–Feldman's deterministic
-> $(1-1/e-\varepsilon)$-approximation for monotone submodular maximization
-> under a matroid constraint.**
-> Shisheng Li, April 2026.
+> submodular matroid algorithm.**
+> Shisheng Li, April 2026. arXiv:TBD.
 
 The note refines the parameter $\ell$ in Algorithm 2 of
 
 > Niv Buchbinder and Moran Feldman.
 > *Deterministic algorithm and faster algorithm for submodular
-> maximization subject to a matroid constraint.* SIAM J. Computing
-> 2024 (preliminary in FOCS 2024).
+> maximization subject to a matroid constraint.* To appear in
+> *SIAM J. Comput.*; preliminary version in *FOCS 2024*.
 > [arXiv:2408.03583](https://arxiv.org/abs/2408.03583)
 
-via two purely elementary tightenings of the bound on $(1+1/\ell)^{-\ell}$.
+via two purely elementary tightenings of the bound on
+$(1+1/\ell)^{-\ell}$.
 
 ## Contents
 
-- `BF24.lean` — single self-contained Lean 4 file, builds against
-  [Mathlib](https://github.com/leanprover-community/mathlib4).
-  No `sorry`, no extra axioms.
+- `BF24.lean` — single self-contained Lean 4 file. No `sorry`; only
+  the standard Mathlib axioms (`propext`, `Classical.choice`,
+  `Quot.sound`).
 
   Verified inequalities:
 
@@ -37,6 +37,31 @@ via two purely elementary tightenings of the bound on $(1+1/\ell)^{-\ell}$.
 
   Reciprocal forms `bf24_lemma1_inv`, `bf24_lemma1pp_inv`,
   `bf24_sharp_inv` are also provided.
+
+## Verifying the proofs
+
+`BF24.lean` is a single file with no project scaffolding. To verify:
+
+1. Have a working Lean 4 toolchain
+   ([`elan`](https://github.com/leanprover/elan)) and any local Lean
+   project pinned to Mathlib. The verified configuration here is
+   Lean toolchain `leanprover/lean4:v4.29.0-rc6` and Mathlib commit
+   [`921b8d39`](https://github.com/leanprover-community/mathlib4/commit/921b8d39f71a5c813b526f38e4033417d40b4c3d).
+
+2. Drop `BF24.lean` into that project (any directory that is part of
+   a Lean library declared in your `lakefile`).
+
+3. Type-check with
+   ```
+   lake env lean BF24.lean
+   ```
+   For an axiom audit, append the following to the file (or to a
+   sibling file that imports it) and re-run:
+   ```lean
+   #print axioms BF24.bf24_lemma1pp
+   #print axioms BF24.bf24_sharp
+   ```
+   Both should report only `[propext, Classical.choice, Quot.sound]`.
 
 ## License
 
