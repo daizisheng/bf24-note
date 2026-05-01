@@ -5,7 +5,7 @@ the note
 
 > **A note on the parameter $\ell$ in Buchbinder–Feldman's deterministic
 > submodular matroid algorithm.**
-> Shisheng Li, April 2026. arXiv:TBD.
+> Shisheng Li, April 2026. [arXiv:2604.27362](https://arxiv.org/abs/2604.27362).
 
 The note refines the parameter $\ell$ in Algorithm 2 of
 
